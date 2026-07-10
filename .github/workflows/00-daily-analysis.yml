@@ -410,14 +410,17 @@ jobs:
           REALTIME_SOURCE_PRIORITY: ${{ vars.REALTIME_SOURCE_PRIORITY || 'tencent,akshare_sina,efinance,akshare_em' }}
           
         run: |
-          # 解析自选股配置：
-          # 1. Repository/Environment secrets 或 Repository variables（STOCK_LIST_CONFIG）
-          # 2. 同名 Environment variables 注入的 runner 环境变量（STOCK_LIST）
-          # 3. 最小默认值
-          if [ -n "${STOCK_LIST_CONFIG:-}" ]; then
+          # 股票池以 config/stock_pool.json 为唯一真源。
+          # 仅当配置文件缺失时，才兼容旧的 GitHub Variable / Secret。
+          if [ -f "config/stock_pool.json" ]; then
+            export STOCK_LIST="$(python scripts/export_chatgpt_reports.py --stock-pool config/stock_pool.json --print-stock-list)"
+            echo "📁 股票池来源: config/stock_pool.json"
+          elif [ -n "${STOCK_LIST_CONFIG:-}" ]; then
             export STOCK_LIST="$STOCK_LIST_CONFIG"
+            echo "🟡 股票池配置文件缺失，降级使用 STOCK_LIST Variable/Secret"
           elif [ -z "${STOCK_LIST:-}" ]; then
-            export STOCK_LIST="600519"
+            echo "❌ 未找到 config/stock_pool.json，也未配置 STOCK_LIST" >&2
+            exit 1
           fi
 
           # 处理 LITELLM YAML 配置文件
@@ -523,6 +526,7 @@ jobs:
           python scripts/export_chatgpt_reports.py \
             --database "${DATABASE_PATH:-./data/stock_analysis.db}" \
             --reports-dir ./reports \
+            --stock-pool ./config/stock_pool.json \
             --date "$(TZ=Asia/Shanghai date +%F)"
 
       - name: 将最新报告保存回仓库

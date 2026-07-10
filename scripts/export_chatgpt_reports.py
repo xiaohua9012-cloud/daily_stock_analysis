@@ -26,17 +26,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
 
-CORE_POOL = {
-    "301217": "铜冠铜箔", "000725": "京东方A", "002384": "东山精密",
-    "300666": "江丰电子", "300285": "国瓷材料", "000988": "华工科技",
-    "002050": "三花智控",
+DEFAULT_STOCK_POOL_PATH = Path("config/stock_pool.json")
+POOL_KEYS = {
+    "core": "核心池",
+    "watch": "观察池",
+    "star": "科创板风向标",
 }
-WATCH_POOL = {
-    "603986": "兆易创新", "002371": "北方华创", "600584": "长电科技",
-    "601869": "长飞光纤", "603773": "沃格光电", "301095": "广立微",
-}
-STAR_POOL = {"688361": "中科飞测", "688072": "拓荆科技", "688012": "中微公司"}
-STOCK_POOL = {**CORE_POOL, **WATCH_POOL, **STAR_POOL}
 
 COMPANY_TRANSLATIONS = {
     r"\bNVIDIA\b|\bNvidia\b": "英伟达",
@@ -67,6 +62,47 @@ class ExportContext:
     generated_at: str
     database_path: Path
     reports_dir: Path
+    stock_pool_path: Path = DEFAULT_STOCK_POOL_PATH
+
+
+def load_stock_pool(path: Path) -> dict[str, dict[str, str]]:
+    """Load and validate the single-source stock pool configuration."""
+    if not path.exists():
+        raise FileNotFoundError(f"股票池配置文件不存在: {path}")
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"股票池配置不是有效 JSON: {path}: {exc}") from exc
+
+    pools: dict[str, dict[str, str]] = {}
+    seen: set[str] = set()
+    for key, label in POOL_KEYS.items():
+        entries = raw.get(key)
+        if not isinstance(entries, list):
+            raise ValueError(f"股票池配置字段 {key} 必须是数组")
+        pool: dict[str, str] = {}
+        for index, entry in enumerate(entries, start=1):
+            if not isinstance(entry, dict):
+                raise ValueError(f"{key} 第 {index} 项必须是对象")
+            code = str(entry.get("code", "")).strip()
+            name = str(entry.get("name", "")).strip()
+            if not re.fullmatch(r"\d{6}", code):
+                raise ValueError(f"{key} 第 {index} 项股票代码必须是六位数字: {code!r}")
+            if not name:
+                raise ValueError(f"{key} 第 {index} 项缺少股票名称")
+            if code in seen:
+                raise ValueError(f"股票代码重复出现在多个股票池: {code}")
+            seen.add(code)
+            pool[code] = name
+        pools[label] = pool
+    if not seen:
+        raise ValueError("股票池配置不能为空")
+    return pools
+
+
+def stock_list_from_config(path: Path) -> str:
+    pools = load_stock_pool(path)
+    return ",".join(code for pool in pools.values() for code in pool)
 
 
 def _number(value: Any) -> float | None:
@@ -233,8 +269,15 @@ def _build_json(ctx: ExportContext) -> dict[str, Any]:
     else:
         missing_global.append("database")
 
+    pools = load_stock_pool(ctx.stock_pool_path)
+    stock_entries = [
+        (code, name, pool_label)
+        for pool_label, pool in pools.items()
+        for code, name in pool.items()
+    ]
+
     stocks = []
-    for code, configured_name in STOCK_POOL.items():
+    for code, configured_name, pool_label in stock_entries:
         row = rows.get(code, {})
         analysis = analyses.get(code, {})
         close = _number(row.get("close"))
@@ -264,7 +307,7 @@ def _build_json(ctx: ExportContext) -> dict[str, Any]:
             "as_of": as_of,
             "data_quality": "A" if not item_missing else ("B" if len(item_missing) <= 2 else "C"),
             "missing_fields": item_missing,
-            "pool": "核心池" if code in CORE_POOL else ("观察池" if code in WATCH_POOL else "科创板风向标"),
+            "pool": pool_label,
         }
         stocks.append(stock)
 
@@ -283,8 +326,9 @@ def _build_json(ctx: ExportContext) -> dict[str, Any]:
         "fallback_reason": "部分字段由数据库现有字段降级生成" if missing_global else None,
         "market_summary": {
             "stock_count": len(stocks), "available_quote_count": available,
-            "core_pool_count": len(CORE_POOL), "watch_pool_count": len(WATCH_POOL),
-            "star_pool_count": len(STAR_POOL),
+            "core_pool_count": len(pools["核心池"]),
+            "watch_pool_count": len(pools["观察池"]),
+            "star_pool_count": len(pools["科创板风向标"]),
         },
         "stocks": stocks,
     }
@@ -363,9 +407,15 @@ def main() -> int:
     parser.add_argument("--database", default=os.getenv("DATABASE_PATH", "./data/stock_analysis.db"))
     parser.add_argument("--reports-dir", default="./reports")
     parser.add_argument("--date", default=datetime.now().strftime("%Y-%m-%d"))
+    parser.add_argument("--stock-pool", default=str(DEFAULT_STOCK_POOL_PATH))
+    parser.add_argument("--print-stock-list", action="store_true")
     args = parser.parse_args()
+    stock_pool_path = Path(args.stock_pool)
+    if args.print_stock_list:
+        print(stock_list_from_config(stock_pool_path))
+        return 0
     now = datetime.now().astimezone().isoformat(timespec="seconds")
-    ctx = ExportContext(args.date, now, Path(args.database), Path(args.reports_dir))
+    ctx = ExportContext(args.date, now, Path(args.database), Path(args.reports_dir), stock_pool_path)
     outputs = export(ctx)
     print("已生成面向 ChatGPT 的结构化与收听版文件：")
     for path in outputs:

@@ -2,7 +2,9 @@ import json
 import sqlite3
 from pathlib import Path
 
-from scripts.export_chatgpt_reports import ExportContext, export, to_listening_text
+from scripts.export_chatgpt_reports import (
+    ExportContext, export, load_stock_pool, stock_list_from_config, to_listening_text,
+)
 
 
 def _make_db(path: Path) -> None:
@@ -29,14 +31,26 @@ def _make_db(path: Path) -> None:
         )
 
 
+def _make_pool(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "schema_version": 1,
+        "core": [{"code": "000988", "name": "华工科技"}],
+        "watch": [{"code": "603986", "name": "兆易创新"}],
+        "star": [{"code": "688012", "name": "中微公司"}],
+    }, ensure_ascii=False), encoding="utf-8")
+
+
 def test_export_contract_and_audio(tmp_path: Path):
     db = tmp_path / "stock.db"
     reports = tmp_path / "reports"
     reports.mkdir()
     (reports / "report_20260709.md").write_text("# NVIDIA 与 AI\n000988 华工科技上涨3.2%", encoding="utf-8")
     _make_db(db)
+    pool = tmp_path / "config/stock_pool.json"
+    _make_pool(pool)
 
-    export(ExportContext("2026-07-09", "2026-07-09T18:30:00+08:00", db, reports))
+    export(ExportContext("2026-07-09", "2026-07-09T18:30:00+08:00", db, reports, pool))
 
     payload = json.loads((reports / "latest.json").read_text(encoding="utf-8"))
     stock = next(s for s in payload["stocks"] if s["code"] == "000988")
@@ -57,3 +71,29 @@ def test_listening_text_removes_markdown():
     assert "|" not in text
     assert "人工智能" in text
     assert "五日均线" in text
+
+
+def test_stock_pool_is_single_source(tmp_path: Path):
+    pool = tmp_path / "config/stock_pool.json"
+    _make_pool(pool)
+
+    loaded = load_stock_pool(pool)
+    assert list(loaded) == ["核心池", "观察池", "科创板风向标"]
+    assert loaded["核心池"] == {"000988": "华工科技"}
+    assert stock_list_from_config(pool) == "000988,603986,688012"
+
+
+def test_stock_pool_rejects_duplicate_codes(tmp_path: Path):
+    pool = tmp_path / "stock_pool.json"
+    pool.write_text(json.dumps({
+        "core": [{"code": "000988", "name": "华工科技"}],
+        "watch": [{"code": "000988", "name": "重复"}],
+        "star": [],
+    }, ensure_ascii=False), encoding="utf-8")
+
+    try:
+        load_stock_pool(pool)
+    except ValueError as exc:
+        assert "重复" in str(exc)
+    else:
+        raise AssertionError("重复股票代码应被拒绝")
