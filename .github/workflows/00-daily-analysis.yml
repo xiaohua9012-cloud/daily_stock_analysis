@@ -24,6 +24,9 @@ on:
         type: boolean
 
 # 并发控制：同一时间只运行一个分析任务
+permissions:
+  contents: write
+
 concurrency:
   group: stock-analysis
   cancel-in-progress: false
@@ -514,6 +517,27 @@ jobs:
             python main.py $FORCE_RUN_ARG
           fi
       
+      - name: 生成结构化数据与可收听版本
+        if: always()
+        run: |
+          python scripts/export_chatgpt_reports.py \
+            --database "${DATABASE_PATH:-./data/stock_analysis.db}" \
+            --reports-dir ./reports \
+            --date "$(TZ=Asia/Shanghai date +%F)"
+
+      - name: 将最新报告保存回仓库
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f reports/latest.json reports/latest.md reports/history reports/audio
+          if git diff --cached --quiet; then
+            echo "报告没有变化，无需提交"
+          else
+            git commit -m "data: 更新每日结构化报告与收听版 [skip ci]"
+            git push
+          fi
+
       - name: 上传分析报告
         uses: actions/upload-artifact@v6
         if: always()
