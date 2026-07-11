@@ -1,10 +1,13 @@
 name: 每日股票分析
 
 on:
-  # 定时触发 - 每天北京时间 18:00 (UTC 10:00)
+  # 工作日双定时：
+  # 北京时间 09:15 = UTC 01:15
+  # 北京时间 21:00 = UTC 13:00
   schedule:
-    - cron: '0 10 * * 1-5'     # 周一到周五，UTC 10:00 = 北京时间 18:00
-  
+    - cron: '15 1 * * 1-5'
+    - cron: '0 13 * * 1-5'
+
   # 手动触发
   workflow_dispatch:
     inputs:
@@ -17,6 +20,15 @@ on:
           - full          # 完整分析（股票+大盘）
           - market-only   # 仅大盘复盘
           - stocks-only   # 仅股票分析
+      report_mode:
+        description: '报告模式'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - premarket
+          - postmarket
       force_run:
         description: '强制运行（跳过交易日检查）'
         required: false
@@ -520,14 +532,34 @@ jobs:
             python main.py $FORCE_RUN_ARG
           fi
       
-      - name: 生成结构化数据与可收听版本
+      - name: 生成结构化数据与跑步收听版
         if: always()
         run: |
+          REPORT_MODE="${{ github.event.inputs.report_mode || 'auto' }}"
+
+          if [ "$REPORT_MODE" = "auto" ]; then
+            if [ "${{ github.event.schedule }}" = "15 1 * * 1-5" ]; then
+              REPORT_MODE="premarket"
+            elif [ "${{ github.event.schedule }}" = "0 13 * * 1-5" ]; then
+              REPORT_MODE="postmarket"
+            else
+              HOUR="$(TZ=Asia/Shanghai date +%H)"
+              if [ "$HOUR" -lt 15 ]; then
+                REPORT_MODE="premarket"
+              else
+                REPORT_MODE="postmarket"
+              fi
+            fi
+          fi
+
+          echo "🎧 收听版模式: $REPORT_MODE"
+
           python scripts/export_chatgpt_reports.py \
             --database "${DATABASE_PATH:-./data/stock_analysis.db}" \
             --reports-dir ./reports \
             --stock-pool ./config/stock_pool.json \
-            --date "$(TZ=Asia/Shanghai date +%F)"
+            --date "$(TZ=Asia/Shanghai date +%F)" \
+            --report-mode "$REPORT_MODE"
 
       - name: 将最新报告保存回仓库
         if: always() && github.ref == 'refs/heads/main'
