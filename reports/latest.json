@@ -1,8 +1,8 @@
 {
   "schema_version": "a_share_v5.1",
-  "report_date": "2026-10-13",
+  "report_date": "2026-10-14",
   "market_date": "2026-10-13",
-  "generated_at": "2026-10-13T07:51:07+00:00",
+  "generated_at": "2026-10-13T19:59:42+00:00",
   "provider": "daily_stock_analysis",
   "as_of": "2026-10-13",
   "data_quality": "A",
@@ -369,5 +369,5 @@
       "pool": "科创板风向标"
     }
   ],
-  "report_mode": "premarket"
+  "report_mode": "postmarket"
 }
