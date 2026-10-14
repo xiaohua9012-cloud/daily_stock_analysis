@@ -1,10 +1,10 @@
 {
   "schema_version": "a_share_v5.1",
   "report_date": "2026-10-14",
-  "market_date": "2026-10-13",
-  "generated_at": "2026-10-13T19:59:42+00:00",
+  "market_date": "2026-10-14",
+  "generated_at": "2026-10-14T06:18:12+00:00",
   "provider": "daily_stock_analysis",
-  "as_of": "2026-10-13",
+  "as_of": "2026-10-14",
   "data_quality": "A",
   "missing_fields": [],
   "fallback_reason": null,
@@ -20,8 +20,8 @@
       "code": "301217",
       "name": "铜冠铜箔",
       "close": 93.0,
-      "change_pct": 3.04,
-      "amount": 1792545280.23,
+      "change_pct": 3.0357,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 95.43,
       "ma10": 102.6,
@@ -30,10 +30,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "核心池"
@@ -41,19 +42,19 @@
     {
       "code": "000725",
       "name": "京东方A",
-      "close": 5.35,
-      "change_pct": 0.38,
-      "amount": 4618735284.15,
+      "close": 5.21,
+      "change_pct": -2.62,
+      "amount": 2511357224.39,
       "turnover_rate": null,
-      "ma5": 5.48,
-      "ma10": 5.68,
-      "ma20": 5.62,
-      "volume_ratio": 1.0,
+      "ma5": 5.38,
+      "ma10": 5.6,
+      "ma20": 5.6,
+      "volume_ratio": 0.55,
       "trend": "二十日均线下方震荡",
       "operation_advice": null,
       "analysis_summary": "",
       "provider": "EfinanceFetcher",
-      "as_of": "2026-10-13",
+      "as_of": "2026-10-14",
       "data_quality": "B",
       "missing_fields": [
         "turnover_rate"
@@ -63,19 +64,19 @@
     {
       "code": "002384",
       "name": "东山精密",
-      "close": 139.75,
-      "change_pct": 2.83,
-      "amount": 9952233398.87,
+      "close": 131.7,
+      "change_pct": -5.76,
+      "amount": 5778898900.08,
       "turnover_rate": null,
-      "ma5": 147.84,
-      "ma10": 165.58,
-      "ma20": 178.55,
-      "volume_ratio": 1.29,
+      "ma5": 140.7,
+      "ma10": 158.94,
+      "ma20": 175.82,
+      "volume_ratio": 0.66,
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
       "provider": "EfinanceFetcher",
-      "as_of": "2026-10-13",
+      "as_of": "2026-10-14",
       "data_quality": "B",
       "missing_fields": [
         "turnover_rate"
@@ -86,8 +87,8 @@
       "code": "300666",
       "name": "江丰电子",
       "close": 199.31,
-      "change_pct": -0.54,
-      "amount": 1515674138.99,
+      "change_pct": -0.5439,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 207.3,
       "ma10": 224.47,
@@ -96,10 +97,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "核心池"
@@ -108,8 +110,8 @@
       "code": "300285",
       "name": "国瓷材料",
       "close": 51.44,
-      "change_pct": -0.52,
-      "amount": 2974509373.35,
+      "change_pct": -0.5221,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 56.49,
       "ma10": 61.71,
@@ -118,10 +120,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "核心池"
@@ -130,8 +133,8 @@
       "code": "000988",
       "name": "华工科技",
       "close": 83.61,
-      "change_pct": 1.25,
-      "amount": 2577977273.81,
+      "change_pct": 1.2473,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 86.28,
       "ma10": 93.43,
@@ -140,10 +143,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "核心池"
@@ -152,8 +156,8 @@
       "code": "002050",
       "name": "三花智控",
       "close": 32.43,
-      "change_pct": -1.22,
-      "amount": 1290698173.69,
+      "change_pct": -1.2184,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 33.7,
       "ma10": 34.72,
@@ -162,10 +166,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "核心池"
@@ -174,8 +179,8 @@
       "code": "603986",
       "name": "兆易创新",
       "close": 306.22,
-      "change_pct": -1.49,
-      "amount": 9387900185.0,
+      "change_pct": -1.4863,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 326.36,
       "ma10": 354.25,
@@ -184,10 +189,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -196,8 +202,8 @@
       "code": "002371",
       "name": "北方华创",
       "close": 591.0,
-      "change_pct": 0.51,
-      "amount": 3636061350.16,
+      "change_pct": 0.5136,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 597.86,
       "ma10": 624.63,
@@ -206,10 +212,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -218,8 +225,8 @@
       "code": "600584",
       "name": "长电科技",
       "close": 60.16,
-      "change_pct": 0.28,
-      "amount": 3304243536.0,
+      "change_pct": 0.2834,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 61.95,
       "ma10": 65.36,
@@ -228,10 +235,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -240,8 +248,8 @@
       "code": "601869",
       "name": "长飞光纤",
       "close": 370.48,
-      "change_pct": 2.29,
-      "amount": 3279111527.0,
+      "change_pct": 2.2917,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 385.14,
       "ma10": 408.03,
@@ -250,10 +258,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -262,8 +271,8 @@
       "code": "603773",
       "name": "沃格光电",
       "close": 76.24,
-      "change_pct": 7.09,
-      "amount": 2030641877.0,
+      "change_pct": 7.0937,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 78.92,
       "ma10": 87.86,
@@ -272,10 +281,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -284,8 +294,8 @@
       "code": "301095",
       "name": "广立微",
       "close": 63.03,
-      "change_pct": -1.24,
-      "amount": 289677023.51,
+      "change_pct": -1.2379,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 64.71,
       "ma10": 69.47,
@@ -294,10 +304,11 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "观察池"
@@ -306,8 +317,8 @@
       "code": "688361",
       "name": "中科飞测",
       "close": 366.51,
-      "change_pct": 6.04,
-      "amount": 3858374729.0,
+      "change_pct": 6.035,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 346.92,
       "ma10": 358.1,
@@ -316,10 +327,11 @@
       "trend": "二十日均线上方震荡",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "科创板风向标"
@@ -328,8 +340,8 @@
       "code": "688072",
       "name": "拓荆科技",
       "close": 654.23,
-      "change_pct": 3.35,
-      "amount": 4775633710.0,
+      "change_pct": 3.3539,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 631.7,
       "ma10": 662.09,
@@ -338,10 +350,11 @@
       "trend": "二十日均线下方震荡",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "科创板风向标"
@@ -350,8 +363,8 @@
       "code": "688012",
       "name": "中微公司",
       "close": 307.69,
-      "change_pct": -1.13,
-      "amount": 4110915019.0,
+      "change_pct": -1.1311,
+      "amount": null,
       "turnover_rate": null,
       "ma5": 312.34,
       "ma10": 324.97,
@@ -360,14 +373,15 @@
       "trend": "空头排列",
       "operation_advice": null,
       "analysis_summary": "",
-      "provider": "EfinanceFetcher",
+      "provider": "TencentFetcher",
       "as_of": "2026-10-13",
       "data_quality": "B",
       "missing_fields": [
+        "amount",
         "turnover_rate"
       ],
       "pool": "科创板风向标"
     }
   ],
-  "report_mode": "postmarket"
+  "report_mode": "premarket"
 }
